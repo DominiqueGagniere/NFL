@@ -1,0 +1,1 @@
+En cas d'erreur SQL Alchemy --> Supprimer le dossier instance contenant la bdd. 

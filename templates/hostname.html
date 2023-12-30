@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hostnames</title>
+</head>
+<body>
+    <h1>Liste des Hostnames</h1>
+    <ul>
+        {% for data in hostnames %}
+            <li>ID: {{ data.id }}, Hostname: {{ data.hostname }}, IP Address: {{ data.ip_address }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
