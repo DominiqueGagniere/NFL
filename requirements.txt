@@ -1,5 +1,5 @@
-flask
+flask 
 python-dotenv # Pour l'utilisation du fichier .flaskenv 
-psycopg2-binary 
-requests # pour la partie client.py de mon test 
+psycopg2-binary # inutile pour l'instant pour la suite avec PostgreSql 
+requests # pour la partie client.py 
 flask_sqlalchemy #SqLite module de connexion 

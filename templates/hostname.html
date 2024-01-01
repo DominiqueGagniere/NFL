@@ -1,14 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hostnames</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Harvester</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Liste des Hostnames</h1>
-    <ul>
-        {% for data in hostnames %}
-            <li>ID: {{ data.id }}, Hostname: {{ data.hostname }}, IP Address: {{ data.ip_address }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1 class="my-4">Liste des Harvester</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Statut</th>
+                    <th>Hostname</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in hostnames %}
+                    <tr>
+                        <td>{{ data.id }}</td>
+                        <td>{{ data.statut }}</td>
+                        <td>{{ data.hostname }}</td>
+                        <td>{{ data.ip_address }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

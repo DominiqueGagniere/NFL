@@ -1,10 +1,11 @@
 # Importation des modules (pip install -r requirement.txt)
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__) # Instance de la classe Flask 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bdd.db' #URI de la bdd qui va être crée  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Pas de suivi des modifications (bdd de test)
+app.secret_key = "nfl"
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
 
 # Génération d'un modèle pour la db avec ID / Hostname / IP
@@ -12,6 +13,7 @@ class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     hostname = db.Column(db.String(50), nullable=False)
     ip_address = db.Column(db.String(15), nullable=False)
+    statut = db.Column(db.String(10), nullable=True)
 
     def __repr__(self): # ?? 
         return f'<MyData {self.hostname}>'
@@ -22,6 +24,10 @@ def create_tables():
 
 def setup():
     create_tables()
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 #Pour utiliser cette partie, executer : client.py 
 @app.route('/envoyer-client-info', methods=['POST'])
@@ -38,6 +44,20 @@ def client_info():
     db.session.commit()
 
     return jsonify({'message': 'Hostname et IP enregistrés avec succès dans la DB'}), 200
+
+@app.route('/connexion', methods=['GET', 'POST'])
+def connexion():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if username == "admin" and password == "nfl":
+            session['logged_in'] = True
+            return redirect("/voir-client-info")
+        else:
+            flash('Connexion refusée. Merci de réessayer votre mot de passe !')
+    return render_template('login.html')
+
 
 #Voir les infos des clients
 @app.route('/voir-client-info')

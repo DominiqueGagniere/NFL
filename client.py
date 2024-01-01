@@ -1,18 +1,18 @@
 import socket
 import requests
+import time
 
-# Obtenir le nom d'hôte
+# Obtenir le nom d'hôte, l'ip et le statut 
 hostname = socket.gethostname()
 ip = socket.gethostbyname('localhost')
+statut = "Connecté"
 # hostname en face de la colonne hostname
-data = {'hostname': hostname, 'ip_address': ip}
+data = {'hostname': hostname, 'ip_address': ip, 'statut': statut}
 
 # URL de l'API
 url = 'http://localhost:5000/envoyer-client-info'  
 
-# Envoyer les données à l'API
-response = requests.post(url, json=data)
-
-# Renvoie le code de la requête envoyé 
-print(response.text)
-
+while True:
+    response = requests.post(url, json=data)
+    print(response.text)
+    time.sleep(30)
