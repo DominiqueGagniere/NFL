@@ -25,27 +25,34 @@ def create_tables():
 def setup():
     create_tables()
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+#@app.route('/')
+#def home():
+#    return render_template('index.html')
 
 #Pour utiliser cette partie, executer : client.py 
-@app.route('/envoyer-client-info', methods=['POST'])
+@app.route('/envoyer-client-info', methods=['PUT'])
 def client_info():
     data = request.get_json()
+    statut = data.get('statut')
     hostname = data.get('hostname')
     ip_address = data.get('ip_address')
-
-    if not hostname or not ip_address:
-        return jsonify({'error' : 'hostname ou/et IP est absent'}), 400 
-        
-    new_data = Data(hostname=hostname, ip_address=ip_address)
-    db.session.add(new_data)
+    
+    if not hostname or not ip_address or not statut :
+        return jsonify({'error' : 'hostname/IP/Statut est absent'}), 400 
+    
+    data_search = Data.query.filter_by(hostname=hostname).first()
+       
+    if data_search: 
+        data_search.ip_address = ip_address
+        data_search.statut = statut 
+    else:
+        new_data = Data(hostname=hostname, ip_address=ip_address, statut=statut)
+        db.session.add(new_data)
+    
     db.session.commit()
+    return jsonify({'message': 'Hostname et IP enregistrés ou mis à jour avec succès dans la DB'}), 200
 
-    return jsonify({'message': 'Hostname et IP enregistrés avec succès dans la DB'}), 200
-
-@app.route('/connexion', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def connexion():
     if request.method == 'POST':
         username = request.form['username']
@@ -53,10 +60,12 @@ def connexion():
         
         if username == "admin" and password == "nfl":
             session['logged_in'] = True
-            return redirect("/voir-client-info")
+            print("Connexion réussie")
+            return redirect('/voir-client-info')
         else:
             flash('Connexion refusée. Merci de réessayer votre mot de passe !')
-    return render_template('login.html')
+            print("Connexion échouée")
+    return render_template('connexion.html')
 
 
 #Voir les infos des clients
@@ -68,5 +77,5 @@ def view_client_info():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 

@@ -9,26 +9,21 @@
 <body>
     <div class="container">
         <h1 class="my-4">Liste des Harvester</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Statut</th>
-                    <th>Hostname</th>
-                    <th>IP Address</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for data in hostnames %}
-                    <tr>
-                        <td>{{ data.id }}</td>
-                        <td>{{ data.statut }}</td>
-                        <td>{{ data.hostname }}</td>
-                        <td>{{ data.ip_address }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+      <div class="container">
+        <div class="row">
+          {% for data in hostnames %}
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title"> {{ data.hostname }} </h5>
+                <p class="card-text">Statut {{ data.statut }}</p>
+                <p class="card-text">IP {{ data.ip_address }}</p>
+                <a href="#" class="btn btn-primary">Détails</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
 </body>
 </html>
