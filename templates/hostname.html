@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Harvester</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+    <link rel="stylesheet" href="static/css/sign-in.css">
+    <title>Liste des Harvester</title>
 </head>
 <body>
     <div class="container">
@@ -16,8 +18,12 @@
             <div class="card mb-4 shadow-sm">
               <div class="card-body">
                 <h5 class="card-title"> {{ data.hostname }} </h5>
-                <p class="card-text">Statut {{ data.statut }}</p>
-                <p class="card-text">IP {{ data.ip_address }}</p>
+                <p class="card-text">
+                  <i class="{% if data.statut == 'Connecté' %}fas fa-circle text-success{% else %}fas fa-circle text-danger{% endif %}"></i>
+                  {% if data.statut == 'Connecté' %}Connecté{% else %}Offline{% endif %}
+                </p>
+                <i class="fas fa-at">{{ data.ip_address }}</p></i>
+                <p class="card-text">
                 <a href="#" class="btn btn-primary">Détails</a>
               </div>
             </div>

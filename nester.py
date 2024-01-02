@@ -25,10 +25,6 @@ def create_tables():
 def setup():
     create_tables()
 
-#@app.route('/')
-#def home():
-#    return render_template('index.html')
-
 #Pour utiliser cette partie, executer : client.py 
 @app.route('/envoyer-client-info', methods=['PUT'])
 def client_info():
@@ -48,6 +44,8 @@ def client_info():
     else:
         new_data = Data(hostname=hostname, ip_address=ip_address, statut=statut)
         db.session.add(new_data)
+    
+    
     
     db.session.commit()
     return jsonify({'message': 'Hostname et IP enregistrés ou mis à jour avec succès dans la DB'}), 200
