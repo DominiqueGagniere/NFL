@@ -1,4 +1,12 @@
-flask 
+flask
+#bdd 
+flask_sqlalchemy #SqLite module de connexion 
 python-dotenv # Pour l'utilisation du fichier .flaskenv 
 psycopg2-binary # inutile pour l'instant pour la suite avec PostgreSql 
-flask_sqlalchemy #SqLite module de connexion 
+
+#login
+flask_login 
+flask_bcrypt 
+flask_wtf 
+wtforms 
+email_validator
