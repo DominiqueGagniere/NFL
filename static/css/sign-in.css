@@ -3,11 +3,12 @@ body {
   height: 100%;
 }
 
-
-
 .form-signin {
   max-width: 330px;
   padding: 1rem;
+}
+.p {
+  font-family: "Lucida Console", "Courier New", monospace;
 }
 
 .form-signin .form-floating:focus-within {
