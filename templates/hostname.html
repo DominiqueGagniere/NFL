@@ -10,138 +10,9 @@
     <link rel="stylesheet" href="static/css/sign-in.css">
     <title>Liste des Harvester</title>
 </head>
-<nav class="bg-gray-800">
-  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-    <div class="relative flex h-16 items-center justify-between">
-      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-        <!-- Mobile menu button-->
-        <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-          <span class="absolute -inset-0.5"></span>
-          <span class="sr-only">Open main menu</span>
-          <!--
-            Icon when menu is closed.
-
-            Menu open: "hidden", Menu closed: "block"
-          -->
-          <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
-          <!--
-            Icon when menu is open.
-
-            Menu open: "block", Menu closed: "hidden"
-          -->
-          <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-        <div class="flex flex-shrink-0 items-center">
-          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
-        </div>
-        <div class="hidden sm:ml-6 sm:block">
-          <div class="flex space-x-4">
-            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Dashboard</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Team</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Calendar</a>
-          </div>
-        </div>
-      </div>
-      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-        <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-          <span class="absolute -inset-1.5"></span>
-          <span class="sr-only">View notifications</span>
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-          </svg>
-        </button>
-
-        <!-- Profile dropdown -->
-        <div class="relative ml-3">
-          <div>
-            <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-              <span class="absolute -inset-1.5"></span>
-              <span class="sr-only">Open user menu</span>
-              <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-            </button>
-          </div>
-
-          <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
-          <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <!-- Active: "bg-gray-100", Not Active: "" -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile menu, show/hide based on menu state. -->
-  <div class="sm:hidden" id="mobile-menu">
-    <div class="space-y-1 px-2 pb-3 pt-2">
-      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-      <a href="#" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
-      <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
-      <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
-      <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Calendar</a>
-    </div>
-  </div>
-</nav>
-<body>
-  <div class="container">
-      <h1 class="my-4">Liste des Harvester</h1>
-{% for data in hostnames %}
-<div class="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
-  <div class="p-6">
-    <h5 class="block mb-2 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-      {{ data.hostname }}
-    </h5>
-    <p class="block font-sans text-base antialiased font-light leading-relaxed text-inherit">
-      <p class="card-text">
-        <i class="{% if data.statut == 'Connecté' %}fas fa-circle text-success{% else %}fas fa-circle text-danger{% endif %}"></i>
-        {% if data.statut == 'Connecté' %}Connecté{% else %}Offline{% endif %}
-      </p>
-      <p>
-        <i class="bi bi-ethernet">{{ data.ip_address }}</p></i>
-    </p>
-  </div>
-  <div class="p-6 pt-0">
-    <button
-      class="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
-      type="button">
-      Détails
-    </button>
-  </div>
-
-</div>
-{%endfor%}
-</div>
-
-
-
-
-
-
-
-
-
 <body>
     <div class="container">
-        <h1 class="my-4">Liste des Harvester</h1>
+      <h4 class="my-4">Liste des Harvester</h4>
       <div class="container">
         <div class="row">
           {% for data in hostnames %}
@@ -164,11 +35,7 @@
       </div>
 
 
-<!--
-// v0 by Vercel.
-// https://v0.dev/t/GqmnaagxVDq
--->
-<div class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900"><header class="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 shadow"><a href="#" class="text-2xl font-bold text-gray-800 dark:text-white lg:text-3xl hover:text-gray-700 dark:hover:text-gray-300" rel="ugc">Brand</a><nav class="hidden lg:block"><ul class="flex items-center space-x-4"><li><a href="#" class="px-3 py-2 rounded text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" rel="ugc">Home</a></li><li><a href="#" class="px-3 py-2 rounded text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" rel="ugc">About</a></li><li><a href="#" class="px-3 py-2 rounded text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" rel="ugc">Services</a></li><li><a href="#" class="px-3 py-2 rounded text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" rel="ugc">Contact</a></li></ul></nav><div class="lg:hidden"><button type="button" class="block text-gray-800 hover:text-gray-600 focus:text-gray-600 focus:outline-none"><svg class="h-6 w-6 fill-current" viewBox="0 0 24 24"><path d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h16v2H4v-2z"></path></svg></button></div></header><main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 dark:bg-gray-800"><div class="container mx-auto px-6 py-8"><h3 class="text-gray-700 dark:text-white text-3xl font-medium">Dashboard</h3><div class="mt-4"><div class="flex flex-wrap -mx-6"><div class="w-full px-6 sm:w-1/2 xl:w-1/3"><div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white dark:bg-gray-700"><div class="p-3 rounded-full bg-orange-600 bg-opacity-75"><svg class="h-8 w-8 text-white" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 0C9.02944 0 5.09375 3.58172 5.09375 8C5.09375 11.1652 7.16367 13.8348 10.0312 15.2061V28.0938C10.0312 29.2406 11.0521 30 12.4062 30H15.5938C16.9479 30 17.9688 29.2406 17.9688 28.0938V15.2061C20.8363 13.8348 22.9062 11.1652 22.9062 8C22.9062 3.58172 18.9706 0 14 0Z" fill="currentColor"></path></svg></div><div class="mx-5"><h4 class="text-2xl font-semibold text-gray-700 dark:text-white">8,282</h4><div class="text-gray-500 dark:text-gray-200">New Users</div></div></div></div><div class="w-full mt-6 px-6 sm:w-1/2 xl:w-1/3 sm:mt-0"><div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white dark:bg-gray-700"><div class="p-3 rounded-full bg-green-600 bg-opacity-75"><svg class="h-8 w-8 text-white" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 0C9.02944 0 5.09375 3.58172 5.09375 8C5.09375 11.1652 7.16367 13.8348 10.0312 15.2061V28.0938C10.0312 29.2406 11.0521 30 12.4062 30H15.5938C16.9479 30 17.9688 29.2406 17.9688 28.0938V15.2061C20.8363 13.8348 22.9062 11.1652 22.9062 8C22.9062 3.58172 18.9706 0 14 0Z" fill="currentColor"></path></svg></div><div class="mx-5"><h4 class="text-2xl font-semibold text-gray-700 dark:text-white">200,521</h4><div class="text-gray-500 dark:text-gray-200">Total Users</div></div></div></div><div class="w-full mt-6 px-6 sm:w-1/2 xl:w-1/3 xl:mt-0"><div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white dark:bg-gray-700"><div class="p-3 rounded-full bg-pink-600 bg-opacity-75"><svg class="h-8 w-8 text-white" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 0C9.02944 0 5.09375 3.58172 5.09375 8C5.09375 11.1652 7.16367 13.8348 10.0312 15.2061V28.0938C10.0312 29.2406 11.0521 30 12.4062 30H15.5938C16.9479 30 17.9688 29.2406 17.9688 28.0938V15.2061C20.8363 13.8348 22.9062 11.1652 22.9062 8C22.9062 3.58172 18.9706 0 14 0Z" fill="currentColor"></path></svg></div><div class="mx-5"><h4 class="text-2xl font-semibold text-gray-700 dark:text-white">215,542</h4><div class="text-gray-500 dark:text-gray-200">Total Views</div></div></div></div></div></div></div></main></div>
+
 
 </body>
 </html>

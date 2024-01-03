@@ -37,7 +37,8 @@ def client_info():
         return jsonify({'error' : 'hostname/IP/Statut est absent'}), 400 
     
     data_search = Data.query.filter_by(hostname=hostname).first()
-       
+
+    
     if data_search: 
         data_search.ip_address = ip_address
         data_search.statut = statut 
