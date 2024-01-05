@@ -1,6 +1,7 @@
 # Importation des modules (pip install -r requirement.txt)
 from flask import Flask, jsonify, request, render_template, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+import threading
 
 app = Flask(__name__) # Instance de la classe Flask 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bdd.db' #URI de la bdd qui va être crée  
@@ -24,6 +25,11 @@ def create_tables():
 
 def setup():
     create_tables()
+
+def check_status():
+   pass # ici le code de ma logique futur 
+
+    
 
 #Pour utiliser cette partie, executer : client.py 
 @app.route('/envoyer-client-info', methods=['PUT'])
