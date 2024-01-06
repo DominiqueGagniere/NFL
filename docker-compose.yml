@@ -2,22 +2,20 @@ version: '3'
 services:
   client-egy:
     build: ./client
-    hostname: Docker-Harvester-egy
-  
+    hostname: Harvester-egy
+
   client-dos:
     build: ./client
-    hostname: Docker-Harvester-dos
-  
+    hostname: Harvester-dos
+
   client-three:
     build: ./client
-    hostname: Docker-Harvester-three
-  
+    hostname: Harvester-three
+
   client-vier:
     build: ./client
-    hostname: Docker-Harvester-vier
-  
+    hostname: Harvester-vier
+
   client-cinq:
     build: ./client
-    hostname: Docker-Harvester-cinq
-  
-    
+    hostname: Harvester-cinq
