@@ -5,23 +5,24 @@
 - client.py
 
 ## Installation 
-git clone
+```
+git clone https://github.com/DominiqueGagniere/NFL.git
 cd NFL/
 pip install -r requirements.txt
 cd client/
 pip install -r requirements.txt
-
+```
 ## Les fonctionnalités 
 ### nester.py 
 - Gère une page de login
-- Initialise une base de données SQLite temporaire avec trois colonnes (id, hostname, ip_address)
+- Initialise une base de données SQLite temporaire avec quatre colonnes (id, hostname, ip_address, last_request)
 - Gère la réception des données via http://localhost/envoyer-client-info
 - Compare les données pour éviter les doublons dans l'interface
 - Supprime les hosts ayant plus de dix minutes d'inactivité de l'interface
 - Créer une page http://localhost/voir-client-info qui affiche les données de la BDD. 
 
 ### client.py 
-- Envoie de la machine hôte vers /envoyer-client-info 
+- Envoie de la machine hôte vers http://localhost/envoyer-client-info 
 
 ## Erreur courante 
 ### File "C:\Users\user\Documents\GitHub\NFL\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
