@@ -4,6 +4,13 @@
 - nester.py 
 - client.py
 
+## Installation 
+git clone
+cd NFL/
+pip install -r requirements.txt
+cd client/
+pip install -r requirements.txt
+
 ## Les fonctionnalités 
 ### nester.py 
 - Gère une page de login
