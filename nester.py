@@ -128,10 +128,15 @@ def view_client_info():
     all_data = Data.query.all()      # Récupère tous les enregistrements
     return render_template('hostname.html', hostnames=all_data)
 
+#voir les détails
+@app.route('/details')
+def details():
+    return render_template('detail.html')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     check_statut = threading.Thread(target=manage_status_v2)
     check_statut.start()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    
 
