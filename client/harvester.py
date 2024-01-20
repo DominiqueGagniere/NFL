@@ -8,6 +8,12 @@ import platform
 import subprocess
 import time
 import threading
+import nmap
+
+#import sys
+#print(sys.version)
+#print(sys.executable)
+#print(sys.path)
 
 app = Flask(__name__)  # Instance de la classe Flask
 
@@ -33,13 +39,13 @@ for host, info in data["hosts"].items():
 # Lancement périodique (10 min) du script d'écriture du JSON 
 def scan_network():
   while True:
-    subprocess.run(["python"], ["ping_nmap.py"])
+    subprocess.run(["python", "C:\\Users\\Dominique\\NFL\\client\\ping_nmap.py"], bufsize=0)
     time.sleep(600)
 
 # Lancement d'un Thread pour l'écriture du JSON
-thread_scan_network = threading.Thread(target=scan_network)
-thread_scan_network.start()
-
+def start_scan_network():
+  thread_scan_network = threading.Thread(target=scan_network)
+  thread_scan_network.start()
 
 os_v = platform.platform()
 latency_wan = measure_latency(host='epsi.fr')
@@ -57,6 +63,16 @@ data = {
     'host_ip': host_ip
 }
 
+# Envoie des requêtes
+def put_to_nester(url, data):
+  while True:
+    response = requests.put(url, json=data)
+    print(response.text)
+    time.sleep(30)
+
+def start_put_to_nester():
+  thread_scan_network = threading.Thread(target=put_to_nester)
+  thread_scan_network.start()
 
 @app.route('/')
 def connexion():
@@ -89,8 +105,6 @@ def dashboard():
                          agent_version=agent_version) 
 
 if __name__ == '__main__':
+  start_scan_network()
+  start_put_to_nester(url, data)
   app.run(debug=True, host='0.0.0.0', port=5000)
-  while True:
-    response = requests.put(url, json=data)
-    print(response.text)
-    time.sleep(30)
