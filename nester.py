@@ -138,5 +138,5 @@ if __name__ == '__main__':
         db.create_all()
     check_statut = threading.Thread(target=manage_status_v2)
     check_statut.start()
-    
+    app.run(debug=True, host='0.0.0.0', port=5000)
 

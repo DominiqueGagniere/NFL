@@ -21,7 +21,7 @@ url = 'http://127.0.0.1:5000/envoyer-client-info'
 
 # Donnée pour le dashboard
 ## Lecture du JSON
-with open('./NFL/client/scan_result.json', 'r') as json_file:
+with open('scan_result.json', 'r') as json_file:
   data = json.load(json_file)
 num_connected_hosts = data["connected_hosts"]
 hosts_and_ports = {}
@@ -33,7 +33,7 @@ for host, info in data["hosts"].items():
 # Lancement périodique (10 min) du script d'écriture du JSON 
 def scan_network():
   while True:
-    subprocess.run(["python", ".\\NFL\\client\\ping_nmap.py"], bufsize=0)
+    subprocess.run(["python", "./client/ping_nmap.py"], bufsize=0)
     time.sleep(600)
 
 # Lancement d'un Thread pour l'écriture du JSON
@@ -101,4 +101,4 @@ def dashboard():
 if __name__ == '__main__':
   start_scan_network()
   start_put_to_nester(url, data)
-  app.run(debug=True, host='0.0.0.0', port=5000)
+  app.run(debug=True, host='0.0.0.0', port=4000)
