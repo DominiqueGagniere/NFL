@@ -1,13 +1,7 @@
 from flask import Flask, render_template, request, redirect, flash, session
-import socket
-import requests
-import time
-import json
+import socket, requests, time, json
 from tcp_latency import measure_latency
-import platform
-import subprocess
-import time
-import threading
+import platform, subprocess, time, threading
 import nmap
 
 #import sys
@@ -19,15 +13,15 @@ app = Flask(__name__)  # Instance de la classe Flask
 
 # Donnée pour API
 hostname = socket.gethostname()
-host_ip = socket.gethostbyname(hostname)
+host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
 statut = "Connected"
 request_time = time.time()
 agent_version = "0.1"
-url = 'http://192.168.1.9:5000/envoyer-client-info'
+url = 'http://127.0.0.1:5000/envoyer-client-info'
 
 # Donnée pour le dashboard
-## Lecture du JSON 
-with open('scan_result.json', 'r') as json_file:
+## Lecture du JSON
+with open('./NFL/client/scan_result.json', 'r') as json_file:
   data = json.load(json_file)
 num_connected_hosts = data["connected_hosts"]
 hosts_and_ports = {}
@@ -39,7 +33,7 @@ for host, info in data["hosts"].items():
 # Lancement périodique (10 min) du script d'écriture du JSON 
 def scan_network():
   while True:
-    subprocess.run(["python", "C:\\Users\\Dominique\\NFL\\client\\ping_nmap.py"], bufsize=0)
+    subprocess.run(["python", ".\\NFL\\client\\ping_nmap.py"], bufsize=0)
     time.sleep(600)
 
 # Lancement d'un Thread pour l'écriture du JSON
@@ -70,8 +64,8 @@ def put_to_nester(url, data):
     print(response.text)
     time.sleep(30)
 
-def start_put_to_nester():
-  thread_scan_network = threading.Thread(target=put_to_nester)
+def start_put_to_nester(url,data):
+  thread_scan_network = threading.Thread(target=put_to_nester,args=(url,data))
   thread_scan_network.start()
 
 @app.route('/')
@@ -94,15 +88,15 @@ def connexion():
 @app.route('/dashboard')
 def dashboard():
   return render_template('clientdb.html',
-                         machines_number=machines_number,
-                         open_ports=open_ports,
-                         ip_adresses=ip_adresses,
-                         hostname=hostname,
-                         host_ip=host_ip,
-                         latency_wan=latency_wan,
-                         statut=statut,
-                         os_v=os_v,
-                         agent_version=agent_version) 
+    machines_number=machines_number,
+    open_ports=open_ports,
+    ip_adresses=ip_adresses,
+    hostname=hostname,
+    host_ip=host_ip,
+    latency_wan=latency_wan,
+    statut=statut,
+    os_v=os_v,
+    agent_version=agent_version) 
 
 if __name__ == '__main__':
   start_scan_network()

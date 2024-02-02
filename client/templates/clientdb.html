@@ -8,7 +8,7 @@
     <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     <link rel="stylesheet" href="static/css/sign-in.css" />
-    <title>Liste des Harvester</title>
+    <title>NFL Harvester</title>
   </head>
 <body>
   <nav class="navbar navbar-light bg-light">
@@ -96,7 +96,8 @@
 
 
 
-        
+    <p id="result"></p>
+    <button onclick="runScript()">Mise à jour Nmap</button>    
     <table class="table table-striped">
         <thead>
           <tr>
@@ -119,5 +120,12 @@
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+      <script>
+        function runScript() {
+            $.get('/refresh_nmap', function(data) {
+                $('#result').text(data.result);
+            });
+        }
+      </script>
+    </body>
 </html>

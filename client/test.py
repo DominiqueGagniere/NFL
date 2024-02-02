@@ -1,22 +1,17 @@
 from flask import Flask, render_template, request, redirect, flash, session, jsonify, url_for #ajout jsonify dynamic button
-import socket
-import requests
-import time
-import json
+import socket, requests, time, json, platform
 import nmap
 from tcp_latency import measure_latency
-import platform
-import subprocess
 
 app = Flask(__name__)  # Instance de la classe Flask
 
 # Donnée pour API
 hostname = socket.gethostname()
-host_ip = socket.gethostbyname(hostname)
+host_ip = socket.gethostbyname_ex(hostname)
 statut = "Connected"
 request_time = time.time()
-agent_version = "0.1"
-url = 'http://192.168.1.9:5000/envoyer-client-info'
+agent_version = "1.0"
+url = 'http://localhost:5000/envoyer-client-info'
 
 
 # Fonction de scan network
@@ -36,6 +31,11 @@ def save_to_json(data, filename):
   with open(filename, 'w') as json_file:
       json.dump(data, json_file, indent=4)
     
+
+
+
+
+
 # Donnée pour le dashboard
 def get_nmap_data(network_to_scan = '172.20.10.0/24'):
   scan_result = scan_network(network_to_scan)
@@ -56,7 +56,6 @@ os_v = platform.platform()
 latency_wan = measure_latency(host='epsi.fr')
 
 
-# hostname en face de la colonne hostname
 data = {
     'hostname': hostname,
     'ip_address': host_ip,  #FIXME!
@@ -70,7 +69,6 @@ data = {
 @app.route('/')
 def connexion():
   if request.method == 'POST':
-    # Si la requète est "POST" (envoie de donnée)
     username = request.form['username']
     password = request.form['password']
 
@@ -84,28 +82,29 @@ def connexion():
   return render_template('connexion.html')
 
 
+
 @app.route('/dashboard')
 def dashboard():
   return render_template('dashboard.html',
-                         machines_number=machines_number,
-                         open_ports=open_ports,
-                         ip_adresses=ip_adresses,
-                         hostname=hostname,
-                         host_ip=host_ip,
-                         latency_wan=latency_wan,
-                         statut=statut,
-                         os_v=os_v,
-                         agent_version=agent_version)
+    machines_number=machines_number,
+    open_ports=open_ports,
+    ip_adresses=ip_adresses,
+    hostname=hostname,
+    host_ip=host_ip,
+    latency_wan=latency_wan,
+    statut=statut,
+    os_v=os_v,
+    agent_version=agent_version)
 
 
 @app.route('/refresh_nmap')
 def run_script():
-    ip_adresses,open_ports,machines_number = get_nmap_data()
-    redirect(url_for('dashboard'), ip_adresses=ip_addresses, open_ports=open_ports, machine_numbers=machines_numbers)
+  ip_adresses,open_ports,machines_number = get_nmap_data()
+  redirect(url_for('dashboard'), ip_adresses=ip_adresses, open_ports=open_ports, machine_numbers=machines_number)
 
 
 if __name__ == '__main__':
-  app.run(debug=True, host='0.0.0.0', port=5000)
+  app.run(debug=True, host='127.0.0.1', port=5000)
   while True:
     response = requests.put(url, json=data)
     print(response.text)
