@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import time
 from datetime import datetime
 import threading
+import json
 
 app = Flask(__name__) # Instance de la classe Flask 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bdd.db' #URI de la bdd qui va être crée  
@@ -11,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Pas de suivi des modifica
 app.secret_key = "nfl" # inutile pour l'instant 
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
 
-# Génération d'un modèle pour la db avec ID / Hostname / IP / Statut / Request_time
+# Génération d'un modèle pour la table du Dashboard avec ID / Hostname / IP / Statut / Request_time
 class Data(db.Model):  
     id = db.Column(db.Integer, primary_key=True)
     statut = db.Column(db.String(10), nullable=True)
@@ -19,6 +20,18 @@ class Data(db.Model):
     ip_address = db.Column(db.String(15), nullable=False)
     last_request = db.Column(db.String(15), nullable=False)
 
+# Génération d'un modèle pour la table des détails 
+class HarvesterDetails(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    machine_number = db.Column(db.Integer)
+    open_ports = db.Column(db.String)  # Peut-être stocker comme JSON ou séparé par des virgules
+    ip_addresses = db.Column(db.String)  # Idem, selon le nombre d'adresses
+    hostname = db.Column(db.String(120))
+    host_ip = db.Column(db.String(120))
+    latency_wan = db.Column(db.Float)
+    statut = db.Column(db.String(50))
+    os_v = db.Column(db.String(120))
+    agent_version = db.Column(db.String(50))
 
 # Création de la forme de la db 
 def create_tables():
@@ -79,10 +92,10 @@ def auto_delete_hostname():
                 
 
 # Lancement d'un thread en parallèle de l'exécution de Flask    
-#check_statut = threading.Thread(target=manage_status_v2)
-#check_statut.start()
+# check_statut = threading.Thread(target=manage_status_v2)
+# check_statut.start()
 
-#Pour utiliser cette partie, executer : client.py ou le stack de client avec 'docker-compose up' 
+# Pour utiliser cette partie, executer : client.py ou le stack de client avec 'docker-compose up' 
 # Cette route n'accepte que les requêtes PUT (Création et mise à jour)
 @app.route('/envoyer-client-info', methods=['PUT'])
 def client_info():
@@ -105,6 +118,41 @@ def client_info():
     
     db.session.commit() # Commit les data retravaillé à la DB 
     return jsonify({'message': 'Hostname et IP enregistrés ou mis à jour avec succès dans la DB'}), 200 # Envoie une confirmation 
+
+@app.route('/envoyer-client-details', methods=['PUT'])
+def client_details():
+    data_details = request.get_json()
+    
+    # Vérifiez si une entrée avec ce hostname existe déjà
+    existing_detail = HarvesterDetails.query.filter_by(hostname=data_details.get('hostname')).first()
+    
+    if existing_detail:
+        # Mettre à jour les champs existants
+        existing_detail.machine_number = int(data_details.get('machine_number', 0))
+        existing_detail.open_ports = json.dumps(data_details.get('open_ports'))
+        existing_detail.ip_addresses = json.dumps(data_details.get('ip_addresses'))
+        existing_detail.host_ip = data_details.get('host_ip')
+        existing_detail.latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan')
+        existing_detail.statut = data_details.get('statut')
+        existing_detail.os_v = data_details.get('os_v')
+        existing_detail.agent_version = data_details.get('agent_version')
+    else:
+        # Créez une nouvelle instance et ajoutez-la si aucune entrée existante n'a été trouvée
+        new_data_details = HarvesterDetails(
+            machine_number = int(data_details.get('machine_number', 0)),
+            open_ports = json.dumps(data_details.get('open_ports')),
+            ip_addresses = json.dumps(data_details.get('ip_addresses')),
+            hostname = data_details.get('hostname'),
+            host_ip = data_details.get('host_ip'),
+            latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan'),
+            statut = data_details.get('statut'),
+            os_v = data_details.get('os_v'),
+            agent_version = data_details.get('agent_version')
+        )
+        db.session.add(new_data_details)
+    
+    db.session.commit()
+    return jsonify({'message': f'Détails mis à jour ou ajoutés avec succès {new_data_details}'}), 200
 
 @app.route('/', methods=['GET', 'POST'])
 def connexion():
@@ -129,12 +177,16 @@ def view_client_info():
     return render_template('hostname.html', hostnames=all_data)
 
 #voir les détails
-@app.route('/details')
-def details():
-    return render_template('detail.html')
+@app.route('/voir-client-info/<hostname>')
+def details(hostname):
+    data_details = HarvesterDetails.query.filter_by(hostname=hostname).first()
+    if data_details: 
+        return render_template('clientdb.html', data_details=data_details)
+    else: 
+        return "Aucune information trouvée pour le hostname spécifié.", 404
 
 if __name__ == '__main__':
-    with app.app_context():
+    with app.app_context(): 
         db.create_all()
     check_statut = threading.Thread(target=manage_status_v2)
     check_statut.start()

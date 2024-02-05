@@ -1,1 +1,3 @@
 requests
+tcp_latency
+python-nmap
