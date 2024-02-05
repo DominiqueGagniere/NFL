@@ -130,7 +130,7 @@ def client_details():
         # Mettre à jour les champs existants
         existing_detail.machine_number = int(data_details.get('machine_number', 0))
         existing_detail.open_ports = json.dumps(data_details.get('open_ports'))
-        existing_detail.ip_addresses = json.dumps(data_details.get('ip_addresses'))
+        existing_detail.ip_addresses = int(json.dumps(data_details.get('ip_addresses', 0)))
         existing_detail.host_ip = data_details.get('host_ip')
         existing_detail.latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan')
         existing_detail.statut = data_details.get('statut')
@@ -141,7 +141,7 @@ def client_details():
         new_data_details = HarvesterDetails(
             machine_number = int(data_details.get('machine_number', 0)),
             open_ports = json.dumps(data_details.get('open_ports')),
-            ip_addresses = json.dumps(data_details.get('ip_addresses')),
+            ip_addresses = int(json.dumps(data_details.get('ip_addresses', 0))),
             hostname = data_details.get('hostname'),
             host_ip = data_details.get('host_ip'),
             latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan'),
@@ -152,7 +152,7 @@ def client_details():
         db.session.add(new_data_details)
     
     db.session.commit()
-    return jsonify({'message': f'Détails mis à jour ou ajoutés avec succès {new_data_details}'}), 200
+    return jsonify({'message': 'Détails mis à jour ou ajoutés avec succès'}), 200
 
 @app.route('/', methods=['GET', 'POST'])
 def connexion():
