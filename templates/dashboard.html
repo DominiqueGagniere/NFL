@@ -23,7 +23,7 @@
               <div class="card-body">
                 <h4 class="card-title">
                   <i class="{% if data.statut == 'Connected' %}fas fa-circle text-success{% else %}fas fa-circle text-danger{% endif %}"></i>
-                  {% if data.statut == 'Connected' %} {{ data.statut }} {%else%}{{  data.statut }} {% endif %}
+                  {% if data.statut == 'Connected' %} {{ data.hostname }} {%else%}{{  data.hostname }} {% endif %}
                 </h4>
                 <h4 class="bi bi-ethernet">   {{ data.ip_address }}</h4>
                 <a href="/voir-client-info/{{ data.hostname }}" class="btn btn-dark">Détails</a>
