@@ -3,6 +3,7 @@ import socket, requests, time, json
 from tcp_latency import measure_latency
 import platform, subprocess, time, threading
 import nmap
+import sys
 
 app = Flask(__name__)  # Instance de la classe Flask
 
@@ -32,7 +33,7 @@ def start_scan_network():
 # Donnée pour API
 hostname = socket.gethostname()
 host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
-statut = "Connected"
+statut = 'Connected'
 request_time = time.time()
 agent_version = "0.1"
 url_nester = 'http://127.0.0.1:5000/envoyer-client-info'
@@ -44,7 +45,7 @@ latency_wan = latency_result[0] if latency_result else None
 ip_adresses = list(hosts_and_ports.keys())
 open_ports = list(hosts_and_ports.values())
 machines_number = len(ip_adresses)
-url_nester_details = f'http://127.0.0.1:5000/envoyer-client-details'
+url_nester_details = 'http://127.0.0.1:5000/envoyer-client-details'
 
 ## Lot de donnée 
 # Lot de donnée pour l'envoi au Nester  
@@ -63,7 +64,7 @@ data_details = {
     'open_ports': open_ports,
     'ip_adresses': ip_adresses,
     'hostname': hostname,
-    'host_ip':host_ip,
+    'host_ip': host_ip,
     'latency_wan':latency_wan,
     'statut':statut,
     'os_v':os_v,
@@ -73,15 +74,31 @@ data_details = {
 # Envoie des requêtes vers la frontpage
 def put_to_nester_fp(url_nester, data_fp):
   while True:
-    response = requests.put(url_nester, json=data_fp)
-    print(response.text)
+    try:
+      response = requests.put(url_nester, json=data_fp)
+      print(response.text)
+    except Exception as e:
+        print(f"""
+[ERREUR] Emplacement : {sys.argv[0]} : {sys.exc_info()[2].tb_lineno}
+Nom de la fonction: {sys._getframe().f_code.co_name}
+Description de l'erreur : {type(e).__name__}
+            """)
+    
     time.sleep(30)
 
 # Envoi des requêtes vers la page détails du nester 
 def put_to_nester_details(url_nester_details, data_details):
     while True:
-      response = requests.put(url_nester_details, json=data_details)
-      print(response.text)
+      try:
+        response = requests.put(url_nester_details, json=data_details)
+        print(response.text)
+      except Exception as e:
+        print(f"""
+[ERREUR] Emplacement : {sys.argv[0]} : {sys.exc_info()[2].tb_lineno}
+Nom de la fonction: {sys._getframe().f_code.co_name}
+Description de l'erreur : {type(e).__name__}
+            """)
+      
       time.sleep(30)
 
 # Thread de l'envoi périodique des données sur la page d'accueil du Nester 
