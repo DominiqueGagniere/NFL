@@ -48,8 +48,8 @@ def manage_status_v2():
                 for client in all_client:
                     search_id = client.id
                     print(f"[NESTER][INFO] Checking the status of : {client.hostname}")
-                    time.sleep(1)
-                    if now - float(client.last_request) > 250 and now - float(client.last_request) < 600:
+                    time.sleep(3)
+                    if now - float(client.last_request) > 60 and now - float(client.last_request) < 350:
                         print(now)
                         print(float(client.last_request))
                         print(now - float(client.last_request))
@@ -92,9 +92,10 @@ def client_info():
         }), 400 # Bad Request 
     
     data_search = Data.query.filter_by(hostname=hostname).first() # Ne créer pas une nouvelle entrée si une avec la même IP existe 
-    if data_search: 
+    if data_search:
         data_search.ip_address = ip_address
-        data_search.statut = statut 
+        data_search.statut = statut
+        data_search.last_request = last_request
     else: # Sinon le fait 
         new_data = Data(hostname=hostname, ip_address=ip_address, statut=statut, last_request=last_request)
         db.session.add(new_data)
