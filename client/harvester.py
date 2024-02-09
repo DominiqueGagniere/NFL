@@ -29,8 +29,9 @@ def start_scan_network():
   thread_scan_network = threading.Thread(target=scan_network)
   thread_scan_network.start()
 
-# Variable perdu 
+# Destination 
 url_nester = 'http://127.0.0.1:5000/envoyer-client-info'
+url_nester_details = 'http://127.0.0.1:5000/envoyer-client-details'
 
 ## Récupération et traitement des données  
 # Donnée pour API
@@ -51,16 +52,29 @@ def refresh_fp_data():
   }
   
   return data_fp
+
+def refresh_details_data():
+  os_v = platform.platform()
+  latency_result = measure_latency(host='epsi.fr')
+  latency_wan = latency_result[0] if latency_result else None
+  ip_adresses = list(hosts_and_ports.keys())
+  open_ports = list(hosts_and_ports.values())
+  machines_number = len(ip_adresses)
+  
+  data_details = {
+    'os_v': os_v,
+    'latency_result': latency_result, 
+    'latency_wan': latency_wan,
+    'ip_adresses': ip_adresses,
+    'open_ports': open_ports,
+    'machines_number': machines_number
+  }
+  
+  return data_details
   
 
 # Donnée pour le tableau de bord et l'url 
-""" os_v = platform.platform()
-latency_result = measure_latency(host='epsi.fr')
-latency_wan = latency_result[0] if latency_result else None
-ip_adresses = list(hosts_and_ports.keys())
-open_ports = list(hosts_and_ports.values())
-machines_number = len(ip_adresses)
-url_nester_details = 'http://127.0.0.1:5000/envoyer-client-details' """
+
 
 ## Lot de donnée 
 # Lot de donnée pour l'envoi au Nester  
@@ -103,8 +117,9 @@ Description de l'erreur : {type(e).__name__}
     time.sleep(30)
 
 # Envoi des requêtes vers la page détails du nester 
-def put_to_nester_details(url_nester_details, data_details):
+def put_to_nester_details(url_nester_details):
     while True:
+      data_details = refresh_details_data()
       try:
         response = requests.put(url_nester_details, json=data_details)
         print(response.text)
@@ -125,9 +140,9 @@ def start_put_to_nester_fp(url_nester):
   thread_scan_network.start()
 
 # Thread de l'envoi périodique des données sur la page de détail du Nester 
-#def start_put_to_nester_details(url_nester_details,data_details):
-  #thread_scan_network = threading.Thread(target=put_to_nester_details,args=(url_nester_details,data_details))
-  #thread_scan_network.start()
+def start_put_to_nester_details(url_nester_details):
+  thread_scan_network = threading.Thread(target=put_to_nester_details,args=(url_nester_details,))
+  thread_scan_network.start()
 
 
 @app.route('/')
@@ -149,10 +164,11 @@ def connexion():
 
 @app.route('/dashboard')
 def dashboard():
+  data_details = refresh_details_data()
   return render_template('clientdb.html', data_details = data_details) 
 
 if __name__ == '__main__':
   #start_scan_network()
   start_put_to_nester_fp(url_nester)
-  #start_put_to_nester_details(url_nester_details, data_details)
+  start_put_to_nester_details(url_nester_details)
   app.run(debug=True, host='0.0.0.0', port=4000)

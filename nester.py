@@ -49,7 +49,7 @@ def manage_status_v2():
                     search_id = client.id
                     print(f"[NESTER][INFO] Checking the status of : {client.hostname}")
                     time.sleep(3)
-                    if now - float(client.last_request) > 60 and now - float(client.last_request) < 350:
+                    if now - float(client.last_request) > 20 and now - float(client.last_request) < 350:
                         print(now)
                         print(float(client.last_request))
                         print(now - float(client.last_request))
@@ -60,17 +60,7 @@ def manage_status_v2():
             except Exception as e: 
                 print(f"[NESTER][STATUT_MANAGER][ERROR] {e}")
             db.session.commit()
-            
-def auto_delete_hostname():
-    with app.app_context():
-        while True: 
-            all_client = Data.query.all()
-            
-                
 
-# Lancement d'un thread en parallèle de l'exécution de Flask    
-# check_statut = threading.Thread(target=manage_status_v2)
-# check_statut.start()
 
 # Pour utiliser cette partie, executer : client.py ou le stack de client avec 'docker-compose up' 
 # Cette route n'accepte que les requêtes PUT (Création et mise à jour)
@@ -140,7 +130,7 @@ def client_details():
             agent_version = data_details.get('agent_version')
         )
         db.session.add(new_data_details)
-    
+        
     db.session.commit()
     timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     return jsonify({
