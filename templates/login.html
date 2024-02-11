@@ -14,6 +14,7 @@
     
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
 <link href="static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -155,8 +156,8 @@
 <main class="form-signin w-100 m-auto">
   <form action="/voir-client-info" method="get"> 
     <main class="form-signin w-100 m-auto">
-        <img class="mb-4" src="static/assets/brand/nfl.svg" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">NFL Administration</h1>
+        <img id="logoNfl" class="mb-4" src="static/assets/brand/nfl.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Nester - {{hostname}}</h1>
         <div class="form-floating">
           <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" name="username">
           <label for="floatingInput">Nom d'utilisateur</label>

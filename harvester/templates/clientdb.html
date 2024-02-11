@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"/>
-    <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
+    <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
     <link rel="stylesheet" href="static/css/sign-in.css" />
-    <title>NFL Harvester</title>
+    <title>Tableau de bord - Harvester</title>
   </head>
 <body>
-  <nav class="navbar navbar-light bg-light">
+  <nav class="navbar navbar-light bg-light fixed-top">
     <a class="navbar-brand" href="#">
       <img src="/brand/NFL.svg" width="30" height="30" class="d-inline-block align-top" alt="">
       Harvester 
@@ -97,7 +96,7 @@
 
 
     <p id="result"></p>
-    <button onclick="runScript()">Mise à jour Nmap</button>    
+    <button class="btn btn-dark" onclick="runScript()">Mise à jour Nmap</button>    
     <table class="table table-striped">
         <thead>
           <tr>
