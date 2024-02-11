@@ -8,13 +8,13 @@
     <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     <link rel="stylesheet" href="static/css/sign-in.css" />
-    <title>Tableau de bord du Harvester {{data_details.hostname}} </title>
+    <title>NFL Harvester</title>
   </head>
 <body>
-  <nav class="navbar navbar-light bg-light fixed-top">
+  <nav class="navbar navbar-light bg-light sticky-top">
     <a class="navbar-brand" href="#">
-      <img src="/static/assets/brand/nester.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-      Harvester - {{data_details.hostname}}
+      <img src="/brand/NFL.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+      Harvester 
     </a>
   </nav>
       <div class="container mt-5">
@@ -95,15 +95,15 @@
     
 
 
-    <div class="container mt-5">
+
     <p id="result"></p>
-    <button class="btn btn-dark" onclick="runScript()">Mise à jour Nmap</button>    
+    <button onclick="runScript()">Mise à jour Nmap</button>    
     <table class="table table-striped">
         <thead>
           <tr>
             <th scope="col">ID</th>
             <th scope="col">IP</th>
-            <th scope="col">Ports ouverts</th>
+            <th scope="col">Open Ports</th>
           </tr>
         </thead>
         <tbody>
@@ -127,6 +127,5 @@
             });
         }
       </script>
-    </div>
     </body>
 </html>

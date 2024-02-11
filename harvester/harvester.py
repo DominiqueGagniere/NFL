@@ -54,7 +54,10 @@ def refresh_fp_data():
   return data_fp
 
 def refresh_details_data():
+  hostname = socket.gethostname()
+  host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
   os_v = platform.platform()
+  statut = 'Connected'
   latency_result = measure_latency(host='epsi.fr')
   latency_wan = latency_result[0] if latency_result else None
   ip_adresses = list(hosts_and_ports.keys())
@@ -62,8 +65,10 @@ def refresh_details_data():
   machines_number = len(ip_adresses)
   
   data_details = {
+    'hostname': hostname,
+    'host_ip': host_ip,
     'os_v': os_v,
-    'latency_result': latency_result, 
+    'Statut': statut,
     'latency_wan': latency_wan,
     'ip_adresses': ip_adresses,
     'open_ports': open_ports,
@@ -159,7 +164,7 @@ def connexion():
     else:
       flash('Connexion refusée. Merci de réessayer votre mot de passe !')
       print("Connexion échouée")
-  return render_template('connexion.html')
+  return render_template('connexion.html', hostname=socket.gethostname())
 
 
 @app.route('/dashboard')
