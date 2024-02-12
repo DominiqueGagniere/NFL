@@ -1,2 +1,4 @@
 /instance/
 /__pycache__/
+/sand.py
+/harvester/sand.py

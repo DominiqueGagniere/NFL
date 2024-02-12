@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, flash, session
 import socket, requests, time, json
 from tcp_latency import measure_latency
 import platform, subprocess, time, threading
-import nmap
+import nmap # Utile ? 
 import sys
+import random # Pour les tests Docker
 
 app = Flask(__name__)  # Instance de la classe Flask
 
@@ -58,6 +59,7 @@ def refresh_details_data():
   host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
   os_v = platform.platform()
   statut = 'Connected'
+  agent_version = "0.1"
   latency_result = measure_latency(host='epsi.fr')
   latency_wan = latency_result[0] if latency_result else None
   ip_adresses = list(hosts_and_ports.keys())
@@ -68,43 +70,17 @@ def refresh_details_data():
     'hostname': hostname,
     'host_ip': host_ip,
     'os_v': os_v,
-    'Statut': statut,
+    'statut': statut,
     'latency_wan': latency_wan,
     'ip_adresses': ip_adresses,
     'open_ports': open_ports,
-    'machines_number': machines_number
+    'machines_number': machines_number,
+    'agent_version': agent_version
+    
   }
   
   return data_details
-  
 
-# Donnée pour le tableau de bord et l'url 
-
-
-## Lot de donnée 
-# Lot de donnée pour l'envoi au Nester  
-#data_fp = {
-# 'hostname': hostname,
-#   'ip_address': host_ip, 
-#   'statut': statut,
-#   'request_time': request_time,
-#   'agent_version': agent_version,
-#   'host_ip': host_ip
-#}
-
-# Lot de donnée pour l'affichage local et l'envoi au Nester Details  
-#data_details = {
-#    'machines_number': machines_number,
-#    'open_ports': open_ports,
-"""    'ip_adresses': ip_adresses,
-    'hostname': hostname,
-    'host_ip': host_ip,
-    'latency_wan':latency_wan,
-    'statut':statut,
-    'os_v':os_v,
-    'agent_version':agent_version, 
-}
- """
 # Envoie des requêtes vers la frontpage
 def put_to_nester_fp(url_nester):
   while True:
@@ -170,10 +146,11 @@ def connexion():
 @app.route('/dashboard')
 def dashboard():
   data_details = refresh_details_data()
-  return render_template('clientdb.html', data_details = data_details) 
+  return render_template('clientdb.html', data_details=data_details) 
 
 if __name__ == '__main__':
   #start_scan_network()
   start_put_to_nester_fp(url_nester)
   start_put_to_nester_details(url_nester_details)
-  app.run(debug=True, host='0.0.0.0', port=4000)
+  n = random.randrange(4000, 4900)
+  app.run(debug=True, host='0.0.0.0', port=n)

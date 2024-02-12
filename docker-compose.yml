@@ -1,21 +1,31 @@
 version: '3'
 services:
-  client-egy:
-    build: ./client
+  nester-uno:
+    build: .
+    hostname: nester
+    network_mode: host 
+
+  harvester-egy:
+    build: ./harvester
     hostname: Harvester-egy
-
-  client-dos:
-    build: ./client
+    network_mode: host
+    
+  harvester-dos:
+    build: ./harvester
     hostname: Harvester-dos
+    network_mode: host
 
-  client-three:
-    build: ./client
+  harvester-three:
+    build: ./harvester
     hostname: Harvester-three
+    network_mode: host
 
-  client-vier:
-    build: ./client
+  harvester-vier:
+    build: ./harvester
     hostname: Harvester-vier
+    network_mode: host
 
-  client-cinq:
-    build: ./client
+  harvester-cinq:
+    build: ./harvester
     hostname: Harvester-cinq
+    network_mode: host

@@ -32,15 +32,8 @@ class HarvesterDetails(db.Model):
     statut = db.Column(db.String(50))
     os_v = db.Column(db.String(120))
     agent_version = db.Column(db.String(50))
-
-# Création de la forme de la db 
-#def create_tables():
-#   db.create_all()
-
-#def setup():
-#   create_tables()
                     
-def manage_status_v2():
+def manage_status_of_host():
     with app.app_context():
         while True: 
             all_client = Data.query.all()
@@ -64,7 +57,7 @@ def manage_status_v2():
             db.session.commit()
 
 
-# Pour utiliser cette partie, executer : client.py ou le stack de client avec 'docker-compose up' 
+# Pour utiliser cette partie, executer : harvester.py ou le stack de client avec 'docker-compose up' 
 # Cette route n'accepte que les requêtes PUT (Création et mise à jour)
 @app.route('/envoyer-client-info', methods=['PUT'])
 def client_info():
@@ -179,7 +172,7 @@ if __name__ == '__main__':
             db.create_all()
     except Exception as e:
         print(f"[NESTER][ERROR][DB GENERATION] {e}")
-    check_statut = threading.Thread(target=manage_status_v2)
+    check_statut = threading.Thread(target=manage_status_of_host)
     check_statut.start()
     app.run(debug=True, host='0.0.0.0', port=5000)
 
