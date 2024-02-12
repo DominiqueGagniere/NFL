@@ -30,11 +30,11 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-      working-directory: Harvester
+      working-directory: harvester
 
     - name: Run Harvester application
       run: python harvester.py
-      working-directory: Harvester
+      working-directory: harvester
       continue-on-error: true # Permet de continuer même si cette étape échoue
 
     - name: Check if Harvester crashed
