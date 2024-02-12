@@ -1,0 +1,45 @@
+name: Crashtest
+
+on: 
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+  test-harvester:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Start Nester application
+      run: |
+        nohup python nester.py &
+        sleep 10 # Donne le temps à l'application de démarrer
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+      working-directory: Harvester
+
+    - name: Run Harvester application
+      run: python harvester.py
+      working-directory: Harvester
+      continue-on-error: true # Permet de continuer même si cette étape échoue
+
+    - name: Check if Harvester crashed
+      run: |
+        if ! pgrep -f harvester.py; then
+          echo "Harvester crashed. Marking test as failed."
+          exit 1
+        fi
