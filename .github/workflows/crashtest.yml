@@ -33,13 +33,9 @@ jobs:
       working-directory: harvester
 
     - name: Run Harvester application
-      run: python harvester.py
-      working-directory: harvester
-      continue-on-error: true # Permet de continuer même si cette étape échoue
-
-    - name: Check if Harvester crashed
       run: |
-        if ! pgrep -f harvester.py; then
-          echo "Harvester crashed. Marking test as failed."
-          exit 1
-        fi
+        python harvester.py &
+        pid=$!
+        sleep 60 # Remplacez 10 par le temps nécessaire pour initialiser
+        kill $pid
+      working-directory: harvester
