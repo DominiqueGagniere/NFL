@@ -5,6 +5,7 @@ import platform, subprocess, time, threading
 import nmap # Utile ? 
 import sys
 import random # Pour les tests Docker
+import urllib.request # Pour l'ip externe (Standard Library)
 
 app = Flask(__name__)  # Instance de la classe Flask
 
@@ -36,27 +37,42 @@ url_nester_details = 'http://127.0.0.1:5000/envoyer-client-details'
 
 ## Récupération et traitement des données  
 # Donnée pour API
-def refresh_fp_data():
+def refresh_fp_data(random_port):
   hostname = socket.gethostname()
-  host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
+  try:
+    hostname_search, _, ip_addresses_list = socket.gethostbyname_ex(hostname)
+  except socket.gaierror:
+    ip_addresses_list = 'Unavailable'
+  count_ip_address = len(ip_addresses_list)
+  external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
   statut = 'Connected'
   request_time = time.time()
   agent_version = "0.1"
+  latency_result = measure_latency(host='epsi.fr')
+  latency_wan = int(latency_result[0]) if latency_result else None
+  # Random port est récupérer dans la fonction
   
   data_fp = {
     'hostname': hostname,
-    'ip_address': host_ip, 
+    'ip_address_list': ip_addresses_list, 
     'statut': statut,
     'request_time': request_time,
     'agent_version': agent_version,
-    'host_ip': host_ip
+    'host_ip': ip_addresses_list,
+    'external_ip': external_ip, 
+    'random_port': random_port,
+    'count_ip_address': count_ip_address,
+    'latency_wan': latency_wan
   }
   
   return data_fp
 
 def refresh_details_data():
   hostname = socket.gethostname()
-  host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
+  try:
+    host_ip = ', '.join(socket.gethostbyname_ex(hostname)[2])
+  except socket.gaierror:
+    host_ip = 'Unavailable'
   os_v = platform.platform()
   statut = 'Connected'
   agent_version = "0.1"
@@ -82,9 +98,9 @@ def refresh_details_data():
   return data_details
 
 # Envoie des requêtes vers la frontpage
-def put_to_nester_fp(url_nester):
+def put_to_nester_fp(url_nester, random_port):
   while True:
-    data_fp = refresh_fp_data()
+    data_fp = refresh_fp_data(random_port)
     try:
       response = requests.put(url_nester, json=data_fp)
       print(response.text)
@@ -116,8 +132,8 @@ Description de l'erreur : {type(e).__name__}
 
 
 # Thread de l'envoi périodique des données sur la page d'accueil du Nester 
-def start_put_to_nester_fp(url_nester):
-  thread_scan_network = threading.Thread(target=put_to_nester_fp,args=(url_nester,))
+def start_put_to_nester_fp(url_nester, random_port):
+  thread_scan_network = threading.Thread(target=put_to_nester_fp,args=(url_nester,random_port))
   thread_scan_network.start()
 
 # Thread de l'envoi périodique des données sur la page de détail du Nester 
@@ -150,7 +166,8 @@ def dashboard():
 
 if __name__ == '__main__':
   #start_scan_network()
-  start_put_to_nester_fp(url_nester)
+  random_port = random.randrange(4000, 4900)
+  start_put_to_nester_fp(url_nester, random_port)
   start_put_to_nester_details(url_nester_details)
-  n = random.randrange(4000, 4900)
-  app.run(debug=True, host='0.0.0.0', port=n)
+  print("Attention t'es dans la branche css bg, pense au PR")
+  app.run(debug=True, host='0.0.0.0', port=random_port)
