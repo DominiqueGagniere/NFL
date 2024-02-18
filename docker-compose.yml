@@ -6,69 +6,34 @@ services:
     ports:
       - "127.0.0.1:5000:5000"
 
-  harvester-egy:
+  client-egy:
     build: ./harvester
-    hostname: Harvester-egy
+    hostname: client-egy
     network_mode: host
     
-  harvester-dos:
+  client-dos:
     build: ./harvester
-    hostname: Harvester-dos
+    hostname: client-dos
     network_mode: host
 
-  harvester-three:
+  client-three:
     build: ./harvester
-    hostname: Harvester-three
+    hostname: client-three
     network_mode: host
 
-  harvester-vier:
+  client-vier:
     build: ./harvester
-    hostname: Harvester-vier
+    hostname: client-vier
     network_mode: host
 
-  harvester-cinq:
+  client-cinq:
     build: ./harvester
-    hostname: Harvester-cinq
+    hostname: client-cinq
     network_mode: host
   
-  harvester-sechs:
+  client-sechs:
     build: ./harvester
-    hostname: Harvester-sechs
+    hostname: client-sechs
     network_mode: host
-  
-  harvester-sieben:
-    build: ./harvester
-    hostname: Harvester-sieben
-    network_mode: host 
-  
-  harvester-huit:
-    build: ./harvester
-    hostname: Harvester-huit
-    network_mode: host 
-  
-  harvester-neuf:
-    build: ./harvester
-    hostname: Harvester-neuf
-    network_mode: host 
-  
-  harvester-ten:
-    build: ./harvester
-    hostname: Harvester-ten
-    network_mode: host 
-  
-  harvester-onze:
-    build: ./harvester
-    hostname: Harvester-onze
-    network_mode: host 
-
-  harvester-treize:
-    build: ./harvester
-    hostname: Harvester-treize
-    network_mode: host 
-  
-  harvester-quatorze:
-    build: ./harvester
-    hostname: Harvester-quatorze
-    network_mode: host 
   
 

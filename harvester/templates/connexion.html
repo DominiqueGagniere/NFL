@@ -153,7 +153,7 @@
     </div>
 
 <main class="form-signin w-100 m-auto">
-  <form action="/dashboard" method="get"> 
+  <form action="/" method="post"> 
     <main class="form-signin w-100 m-auto">
         <img class="mb-4" src="static/assets/brand/nfl.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Harvester - {{hostname}}</h1>
@@ -165,6 +165,13 @@
           <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
           <label for="floatingPassword">Mot de passe</label>
         </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flash-messages">
+              <li>{{ messages[0] }}</li>
+          </ul>
+        {% endif %}
+      {% endwith %}
         <button class="btn btn-primary w-100 py-2" type="submit" value="Connexion">Se connecter</button>
   </form>
   <script src="static/assets/dist/js/bootstrap.bundle.min.js"></script>

@@ -12,7 +12,7 @@
 <body>
   <nav class="navbar navbar-light bg-light fixed-top">
     <a class="navbar-brand" href="#">
-      <img src="/brand/NFL.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+      <img src="/static/assets/brand/harvester.svg" width="30" height="30" class="d-inline-block align-top" alt="">
       Harvester 
     </a>
   </nav>
@@ -32,13 +32,27 @@
               <div class="col-md-6">
                   <div class="card">
                       <div class="card-body">
-                          <h5 class="card-title">Latence en milliseconde</h5>
-                          <p class="card-text">{{data_details.latency_wan}}</p>
+                        <h5 class="card-title">Latence en millisecondes - MàJ 10 secondes</h5>
+                        <p class="card-text" id="dynamicLatency">{{latency_wan}}</p>
+                        <script>
+                            function changeLatency() {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('POST', '/get_latency', true);
+                                xhr.setRequestHeader('Content-Type', 'application/json');
+                                xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                        var response = JSON.parse(xhr.responseText);
+                                        document.getElementById("dynamicLatency").innerText = response.content;
+                                    }
+                                };
+                                xhr.send();
+                            }
+                            // Mesure de la latence toutes les 10 secondes
+                            setInterval(changeLatency, 10000);  
+                          </script>                     
                       </div>
                   </div>
               </div>
-          </div>
-      </div>
   
       <body>
         <div class="container mt-5">
@@ -91,12 +105,15 @@
               </div>
           </div>
         </div>
+      </div>
+    </div>
     
 
 
 
+    <div class="container mt-5">
     <p id="result"></p>
-    <button class="btn btn-dark" onclick="runScript()">Mise à jour Nmap</button>    
+    <button class="btn btn-dark" onclick="updateTable()">Mise à jour Nmap</button>    
     <table class="table table-striped">
         <thead>
           <tr>
@@ -105,26 +122,38 @@
             <th scope="col">Open Ports</th>
           </tr>
         </thead>
-        <tbody>
-          {% for i in range(0,data_details.machines_number) %}
-          <tr>
-            <th scope="row">{{i+1}}</th>
-            <td>{{data_details.ip_adresses[i]}}</td>
-            <td>{{data_details.open_ports[i]}}</td>
-          </tr>
-          {% endfor %}
+        <tbody id="tableBody">
         </tbody>
       </table>
 
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <h1 id="dynamicContent">{{ content }}</h1>
       <script>
-        function runScript() {
-            $.get('/refresh_nmap', function(data) {
-                $('#result').text(data.result);
-            });
-        }
-      </script>
+        function updateTable() {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/dashboard/refresh_nmap', true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  var response = JSON.parse(xhr.responseText);
+                  var tableBody = document.getElementById("tableBody");
+                  tableBody.innerHTML = ''; // Efface le contenu actuel du tableau
+                  var data = response.data_details_nmap;
+                  for (var i = 0; i < data.num_connected_hosts; i++) {
+                      var row = `<tr>
+                                   <th scope="row">${i+1}</th>
+                                   <td>${data.ip_adresses[i]}</td>
+                                   <td>${data.open_ports[i].join(', ')}</td>
+                                 </tr>`;
+                      tableBody.innerHTML += row;
+                  }
+              }
+          };
+          xhr.send();
+      }
+    </script>
+    </div>
     </body>
 </html>
