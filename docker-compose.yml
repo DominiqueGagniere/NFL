@@ -3,7 +3,8 @@ services:
   nester-uno:
     build: .
     hostname: nester
-    network_mode: host 
+    ports:
+      - "127.0.0.1:5000:5000"
 
   harvester-egy:
     build: ./harvester
@@ -29,3 +30,45 @@ services:
     build: ./harvester
     hostname: Harvester-cinq
     network_mode: host
+  
+  harvester-sechs:
+    build: ./harvester
+    hostname: Harvester-sechs
+    network_mode: host
+  
+  harvester-sieben:
+    build: ./harvester
+    hostname: Harvester-sieben
+    network_mode: host 
+  
+  harvester-huit:
+    build: ./harvester
+    hostname: Harvester-huit
+    network_mode: host 
+  
+  harvester-neuf:
+    build: ./harvester
+    hostname: Harvester-neuf
+    network_mode: host 
+  
+  harvester-ten:
+    build: ./harvester
+    hostname: Harvester-ten
+    network_mode: host 
+  
+  harvester-onze:
+    build: ./harvester
+    hostname: Harvester-onze
+    network_mode: host 
+
+  harvester-treize:
+    build: ./harvester
+    hostname: Harvester-treize
+    network_mode: host 
+  
+  harvester-quatorze:
+    build: ./harvester
+    hostname: Harvester-quatorze
+    network_mode: host 
+  
+

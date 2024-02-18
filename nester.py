@@ -17,7 +17,11 @@ class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     statut = db.Column(db.String(10), nullable=True)
     hostname = db.Column(db.String(50), nullable=False)
-    ip_address = db.Column(db.String(15), nullable=False)
+    random_port = db.Column(db.Integer)
+    ip_address_list = db.Column(db.PickleType)
+    count_ip_address = db.Column(db.Integer)
+    external_ip = db.Column(db.String(15), nullable=False)
+    latency_wan = db.Column(db.Float)
     last_request = db.Column(db.String(15), nullable=False)
 
 # Génération d'un modèle pour la table des détails 
@@ -27,7 +31,7 @@ class HarvesterDetails(db.Model):
     open_ports = db.Column(db.PickleType) 
     ip_adresses = db.Column(db.PickleType)  
     hostname = db.Column(db.String(120))
-    host_ip = db.Column(db.String(120))
+    host_ip = db.Column(db.PickleType)
     latency_wan = db.Column(db.Float)
     statut = db.Column(db.String(50))
     os_v = db.Column(db.String(120))
@@ -63,26 +67,34 @@ def manage_status_of_host():
 def client_info():
     data = request.get_json() # Récupére le JSON envoyé par client.py 
     statut = data.get('statut') # Assigne des variables aux éléments du PUT 
-    hostname = data.get('hostname') 
-    ip_address = data.get('ip_address')
+    hostname = data.get('hostname')
+    ip_address_list = data.get('ip_address_list')
+    count_ip_address = data.get('count_ip_address')
+    random_port = data.get('random_port')
+    external_ip = data.get('external_ip')
+    latency_wan = data.get('latency_wan')[0] if isinstance(data.get('latency_wan'), list) else data.get('latency_wan')
     last_request = data.get('request_time')
-    
-    if not hostname or not ip_address or not statut or not last_request : # Vérifie la pertinence des données et en cas de d'incohérence renvoie un code 400 
+
+    if not hostname or not ip_address_list or not statut or not last_request : # Vérifie la pertinence des données et en cas de d'incohérence renvoie un code 400 
         timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         return jsonify({'status' : 'error',
                         'timestamp': timestamp,
-                        'data': [statut, hostname, ip_address, last_request],
+                        'data': [statut, hostname, ip_address_list, count_ip_address, random_port, latency_wan, last_request],
                         'message': "Invalid Value"
                         
         }), 400 # Bad Request 
     
     data_search = Data.query.filter_by(hostname=hostname).first() # Ne créer pas une nouvelle entrée si une avec la même IP existe 
     if data_search:
-        data_search.ip_address = ip_address
+        data_search.ip_address_list = ip_address_list
         data_search.statut = statut
+        data_search.count_ip_address = count_ip_address
+        data_search.external_ip = external_ip
+        data_search.random_port = random_port
+        data_search.latency_wan = latency_wan
         data_search.last_request = last_request
     else: # Sinon le fait 
-        new_data = Data(hostname=hostname, ip_address=ip_address, statut=statut, last_request=last_request)
+        new_data = Data(hostname=hostname, ip_address_list=ip_address_list, statut=statut, count_ip_address=count_ip_address, external_ip=external_ip, random_port=random_port, last_request=last_request)
         db.session.add(new_data)
     
     db.session.commit() # Commit les data retravaillé à la DB
@@ -90,7 +102,7 @@ def client_info():
     return jsonify({
         'status': 'Success',
         'timestamp': timestamp,
-        'data': [statut, hostname, ip_address, last_request],
+        'data': [statut, hostname, ip_address_list, count_ip_address, random_port, latency_wan, last_request],
         'message': 'The data for the Nester dashboard was received successfully',
 }), 200 # Envoie une confirmation 
 
@@ -134,7 +146,15 @@ def client_details():
         'data': [data_details],
         'message': 'The data for the Nester details was received successfully',
 }), 200 # Envoie une confirmation
-    
+
+#FIXME AJAX 
+@app.route('/obtenir-dernieres-infos', methods=['GET'])
+def get_latest_info():
+    latency_result = measure_latency(host='epsi.fr')
+    return jsonify(latency_result)
+
+
+
 @app.route('/', methods=['GET', 'POST'])
 def connexion():
     if request.method == 'POST': # Si la requète est "POST" (envoie de donnée) 
@@ -154,8 +174,8 @@ def connexion():
 #Voir les infos des clients
 @app.route('/voir-client-info')
 def view_client_info():
-    all_data = Data.query.all()      # Récupère tous les enregistrements
-    return render_template('dashboard.html', hostnames=all_data)
+    data_fp = Data.query.all()      # Récupère tous les enregistrements FIXME
+    return render_template('dashboard.html', data_fp=data_fp)
 
 #voir les détails
 @app.route('/voir-client-info/<hostname>')
@@ -174,5 +194,6 @@ if __name__ == '__main__':
         print(f"[NESTER][ERROR][DB GENERATION] {e}")
     check_statut = threading.Thread(target=manage_status_of_host)
     check_statut.start()
+    print("Attention t'es dans la branche css bg, pense au PR")
     app.run(debug=True, host='0.0.0.0', port=5000)
 
