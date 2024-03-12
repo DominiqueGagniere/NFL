@@ -194,6 +194,5 @@ if __name__ == '__main__':
         print(f"[NESTER][ERROR][DB GENERATION] {e}")
     check_statut = threading.Thread(target=manage_status_of_host)
     check_statut.start()
-    print("Attention t'es dans la branche css bg, pense au PR")
     app.run(debug=True, host='0.0.0.0', port=5000)
 
