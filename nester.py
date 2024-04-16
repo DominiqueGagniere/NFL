@@ -1,16 +1,18 @@
 # Importation des modules (pip install -r requirement.txt)
 from flask import Flask, jsonify, render_template, redirect, flash, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import time
 import threading
 import datetime
 import socket
 
 app = Flask(__name__) # Instance de la classe Flask 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nester.db' #URI de la bdd qui va être crée  
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:1234@172.18.0.33/nester' #URI de la bdd postgres 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Test de la fonction True 
 app.secret_key = 'H,ObpL+jx0(nAu9j!seY[9B39-y<khl76'
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
+migrate = Migrate(app, db) # Instance de Flask-Migrate 
 
 # Génération d'un modèle pour la table du Dashboard avec ID / Hostname / IP / Statut / Request_time
 class NesterFrontpage(db.Model):  
@@ -181,11 +183,11 @@ def details(hostname):
         return "Aucune information trouvée pour le hostname spécifié.", 404
 
 if __name__ == '__main__':
-    try:
-        with app.app_context():
-            db.create_all()
-    except Exception as e:
-        print(f"[NESTER][ERROR][DB GENERATION] {e}")
+    ##try:
+    ##    with app.app_context():
+    ##      db.create_all()
+    ##except Exception as e:
+    ##    print(f"[NESTER][ERROR][DB GENERATION] {e}")
     check_statut = threading.Thread(target=manage_status_of_host)
     check_statut.start()
     app.run(debug=True, host='0.0.0.0', port=5000)
