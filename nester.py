@@ -183,11 +183,11 @@ def details(hostname):
         return "Aucune information trouvée pour le hostname spécifié.", 404
 
 if __name__ == '__main__':
-    ##try:
-    ##    with app.app_context():
-    ##      db.create_all()
-    ##except Exception as e:
-    ##    print(f"[NESTER][ERROR][DB GENERATION] {e}")
+    try:
+        with app.app_context():
+          db.create_all()
+    except Exception as e:
+        print(f"[NESTER][ERROR][DB GENERATION] {e}")
     check_statut = threading.Thread(target=manage_status_of_host)
     check_statut.start()
     app.run(debug=True, host='0.0.0.0', port=5000)
