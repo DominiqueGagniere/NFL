@@ -156,7 +156,7 @@ Description de l'erreur : {type(e).__name__}
       
 def put_to_nester_nmap(url_nester_details, network):
       while True:
-        data_nmap = refresh_details_scan_network()
+        data_nmap = refresh_details_scan_network(network)
         try:
           response = requests.put(url_nester_details, json=data_nmap)
           print(response.text)
@@ -232,4 +232,6 @@ if __name__ == '__main__':
       random_port = int(os.environ['FLASK_RUN_PORT'])
   start_put_to_nester_fp(url_nester, random_port)
   start_put_to_nester_details(url_nester_details)
+  network = '192.168.1.0/24'
+  put_to_nester_nmap(network)
   app.run(debug=True, host='0.0.0.0', port=random_port)
