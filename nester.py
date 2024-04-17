@@ -130,7 +130,7 @@ def client_details():
     else:
         # Créez une nouvelle instance et ajoutez-la si aucune entrée existante n'a été trouvée
         new_data_details = NesterDetails(
-            machines_number = int(data_details.get('machines_number')),
+            machines_number = data_details.get('machines_number'),
             open_ports = data_details.get('open_ports')[0],
             ip_adresses = data_details.get('ip_adresses'),
             hostname = data_details.get('hostname'),
