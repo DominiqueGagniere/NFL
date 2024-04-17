@@ -25,7 +25,7 @@ def refresh_fp_data(random_port):
   count_ip_address = len(ip_addresses_list)
   external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
   statut = 'Connected'
-  request_time = time.time()
+  request_time = int(time.time())
   agent_version = "1.1"
   os_v = platform.platform()
   #latency_result = measure_latency(host='epsi.fr')
