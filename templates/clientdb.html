@@ -107,7 +107,8 @@
           </tr>
         </thead>
         <tbody>
-          {% for i in range(0,data_details.machines_number) %}
+          {% set machine_count = data_details.machines_number | default(0, true) %}
+          {% for i in range(0, machine_count) %}
           <tr>
             <th scope="row">{{i+1}}</th>
             <td>{{data_details.ip_adresses[i]}}</td>

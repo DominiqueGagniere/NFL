@@ -78,10 +78,10 @@ def refresh_details_data():
 def refresh_details_scan_network(network):
     # La commande "nmap network -T5" comprend l'option -sS par défaut
     # On utilise le scan tcp syn
-    print("[NMAP] Lancement du scan")
+    print(f"[NMAP] [{network}] Lancement du scan")
     nmap_instance = nmap3.NmapScanTechniques()
     raw_scan_results = nmap_instance.nmap_syn_scan(network, args='-T5') 
-    print("[NMAP] Scan en cours")
+    print(f"[NMAP] [{network}] Scan en cours")
     # On supprime les données qui ne sont pas des adresses ip pour le traitement des données
     for key in ['runtime','stats','task_results']:
         del raw_scan_results[key]
@@ -111,13 +111,17 @@ def refresh_details_scan_network(network):
     ip_adresses = list(hosts_and_ports.keys())
     open_ports = list(hosts_and_ports.values())
     
+    # Ajout de l'hostname pour permettre l'ajout dans la bonne ligne de la BDD.
+    hostname = hostname=socket.gethostname()
+    
     # Packaging 
     data_details_nmap = {
+      'hostname': hostname,
       'num_connected_hosts': num_connected_hosts, 
       'ip_adresses': ip_adresses,
       'open_ports': open_ports
     }
-
+    print(f"[NMAP] [{network}] Fin du scan")
     return data_details_nmap
 
 
@@ -207,7 +211,9 @@ def dashboard():
 
 @app.route('/dashboard/refresh_nmap', methods=['POST'])
 def refresh_nmap():
-  network = '192.168.1.0/24'
+  # Limite par le nmap netmask /24 
+  network = '172.18.0.0/24'
+  print(f"[NMAP] [{network}] Début d'un scan depuis la page refresh_nmap")
   data_details_nmap = refresh_details_scan_network(network)
   # Obtenir la date et l'heure actuelles formatées
   temps_format = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
@@ -232,6 +238,7 @@ if __name__ == '__main__':
       random_port = int(os.environ['FLASK_RUN_PORT'])
   start_put_to_nester_fp(url_nester, random_port)
   start_put_to_nester_details(url_nester_details)
-  network = '192.168.1.0/24'
-  put_to_nester_nmap(network)
+  # Limite pas le netmask /24
+  network = '172.18.0.0/24'
+  put_to_nester_nmap(url_nester_details, network)
   app.run(debug=True, host='0.0.0.0', port=random_port)

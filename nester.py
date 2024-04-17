@@ -8,7 +8,7 @@ import datetime
 import socket
 
 app = Flask(__name__) # Instance de la classe Flask 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@172.18.0.33/nester' #URI de la bdd postgres 
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@172.18.0.33/nester" #URI de la bdd postgres 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Test de la fonction True 
 app.secret_key = 'H,ObpL+jx0(nAu9j!seY[9B39-y<khl76'
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
@@ -115,25 +115,38 @@ def client_info():
 def client_details():
     data_details = request.get_json()
     
+    
     # Vérifiez si une entrée avec ce hostname existe déjà
     existing_detail = NesterDetails.query.filter_by(hostname=data_details.get('hostname')).first()
     
     if existing_detail:
         # Mettre à jour les champs existants
-        existing_detail.open_ports = data_details.get('open_ports')
-        existing_detail.ip_adresses = data_details.get('ip_adresses')
-        existing_detail.host_ip = data_details.get('host_ip')
-        existing_detail.latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan')
-        existing_detail.statut = data_details.get('statut')
-        existing_detail.os_v = data_details.get('os_v')
-        existing_detail.agent_version = data_details.get('agent_version')
+        if data_details.get('num_connected_hosts') is not None:
+            existing_detail.machines_number =  data_details.get('num_connected_hosts')
+        if data_details.get('open_ports') is not None: 
+            existing_detail.open_ports = data_details.get('open_ports')
+        if data_details.get('ip_adresses') is not None:
+            existing_detail.ip_adresses = data_details.get('ip_adresses')
+        if data_details.get('host_ip') is not None:
+            existing_detail.host_ip = data_details.get('host_ip')
+        if data_details.get('latency_wan') is not None:
+            existing_detail.latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan')
+        if data_details.get('statut') is not None:
+            existing_detail.statut = data_details.get('statut')
+        if data_details.get('os_v') is not None:
+            existing_detail.os_v = data_details.get('os_v')
+        if data_details.get('agent_version') is not None:
+            existing_detail.agent_version = data_details.get('agent_version')
     else:
         # Créez une nouvelle instance et ajoutez-la si aucune entrée existante n'a été trouvée
         new_data_details = NesterDetails(
-            machines_number = data_details.get('machines_number'),
+            # En provenance de refresh_details_scan_network et refresh_details_data
+            hostname = data_details.get('hostname'),
+            # En provenance de refresh_details_scan_network du Harvester
+            machines_number = data_details.get('num_connected_hosts'),
             open_ports = data_details.get('open_ports'),
             ip_adresses = data_details.get('ip_adresses'),
-            hostname = data_details.get('hostname'),
+            # En provenance de refresh_details_data du Harvester
             host_ip = data_details.get('host_ip'),
             latency_wan = data_details.get('latency_wan')[0] if isinstance(data_details.get('latency_wan'), list) else data_details.get('latency_wan'),
             statut = data_details.get('statut'),
