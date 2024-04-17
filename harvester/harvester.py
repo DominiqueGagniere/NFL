@@ -84,6 +84,7 @@ def refresh_details_scan_network(network):
     print(f"[NMAP] [{network}] Scan en cours")
     # On supprime les données qui ne sont pas des adresses ip pour le traitement des données
     for key in ['runtime','stats','task_results']:
+      if key in raw_scan_results:
         del raw_scan_results[key]
     
     # On vérifie pour chaque adresse ip scannée si des ports sont ouverts
