@@ -91,7 +91,16 @@ def refresh_details_scan_network(network):
     # Dans ce cas on retiendra seulement les ports pour être le plus pertinent
     connected_hosts = {}
     for ip in raw_scan_results.keys():
-        if raw_scan_results[ip]['ports']:
+        if raw_scan_results.get('error'):
+          nmap_error_msg = raw_scan_results.get('msg', '')
+          if 'root' in nmap_error_msg or 'administrator' in nmap_error_msg:
+                print(f"""
+[ERREUR] Emplacement : c:/Users/domin/NFL/harvester/harvester.py
+Nom de la fonction : refresh_details_scan_network
+Erreur : Nécessite des privilèges plus élevés pour continuer.
+Message d'erreur complet : {nmap_error_msg}
+                """)
+        elif raw_scan_results[ip]['ports']:
             # Le contenu de la clé 'ports' est une liste de dictionnaires 
             # qu'on transforme en liste de strings : les ports ouverts en TCP SYN parmi les 1000 ports scannés
             open_ports_on_ip = []
