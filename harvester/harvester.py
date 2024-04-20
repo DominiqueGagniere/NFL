@@ -195,6 +195,11 @@ def start_put_to_nester_fp(url_nester, random_port):
 def start_put_to_nester_details(url_nester_details):
   thread_details = threading.Thread(target=put_to_nester_details,args=(url_nester_details,))
   thread_details.start()
+  
+# Thread de l'envoi périodique des données sur la page de scan du Nester
+def start_put_to_nester_nmap(url_nester_details, network):
+  thread_nmap = threading.Thread(target=put_to_nester_nmap,args=(url_nester_details,network,))
+  thread_nmap.start()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -250,5 +255,5 @@ if __name__ == '__main__':
   start_put_to_nester_details(url_nester_details)
   # Limite pas le netmask /24
   network = '172.18.0.0/24'
-  put_to_nester_nmap(url_nester_details, network)
+  start_put_to_nester_nmap(url_nester_details, network)
   app.run(debug=True, host='0.0.0.0', port=random_port)

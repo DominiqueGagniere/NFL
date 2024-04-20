@@ -1,13 +1,14 @@
 # Importation des modules (pip install -r requirement.txt)
 from flask import Flask, jsonify, render_template, redirect, flash, request
 from flask_sqlalchemy import SQLAlchemy
+#from flask_migrate import Migrate
 import time
 import threading
 import datetime
 import socket
 
 app = Flask(__name__) # Instance de la classe Flask 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@172.18.0.33/nester" #URI de la bdd postgres 
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///bdd.db" #URI de la bdd postgres 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Test de la fonction True 
 app.secret_key = 'H,ObpL+jx0(nAu9j!seY[9B39-y<khl76'
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
