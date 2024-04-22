@@ -5,9 +5,15 @@ import time
 import threading
 import datetime
 import socket
+import argparse # Pour permettre les arguments CLI 
+
 
 app = Flask(__name__) # Instance de la classe Flask 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@172.18.0.33/nester" #URI de la bdd postgres 
+parser = argparse.ArgumentParser(description="Script pour lancer nester") # Instance de argparse
+parser.add_argument('--bdd', default="postgresql://postgres:1234@172.18.0.33/nester",  help="Lien de la base de donnée postgres") # Instance de argparse
+args = parser.parse_args()
+bdd = args.bdd
+app.config['SQLALCHEMY_DATABASE_URI'] = bdd #URI de la bdd postgres 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Test de la fonction True 
 app.secret_key = 'H,ObpL+jx0(nAu9j!seY[9B39-y<khl76'
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
