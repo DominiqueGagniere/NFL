@@ -2,3 +2,4 @@ flask
 requests
 tcp_latency
 python-nmap
+python3-nmap

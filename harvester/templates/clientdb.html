@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lucida+Console:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"/>
     <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
@@ -12,9 +13,10 @@
 <body>
   <nav class="navbar navbar-light bg-light fixed-top">
     <a class="navbar-brand" href="#">
-      <img src="/brand/NFL.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+      <img src="/static/assets/brand/harvester.svg" width="30" height="30" class="d-inline-block align-top" alt="">
       Harvester 
     </a>
+    <!-- <button type="button" class="btn btn-dark ml-auto" data-toggle="modal" data-target="#configModal">Configuration</button>-->
   </nav>
       <div class="container mt-5">
           <div class="row">
@@ -32,13 +34,29 @@
               <div class="col-md-6">
                   <div class="card">
                       <div class="card-body">
-                          <h5 class="card-title">Latence en milliseconde</h5>
-                          <p class="card-text">{{data_details.latency_wan}}</p>
+                        <h5 class="card-title">Latence en millisecondes - MàJ 10 secondes</h5>
+                        <p class="card-text" id="dynamicLatency">{{latency_wan}}</p>
+                        <script>
+                            function changeLatency() {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('POST', '/get_latency', true);
+                                xhr.setRequestHeader('Content-Type', 'application/json');
+                                xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                        var response = JSON.parse(xhr.responseText);
+                                        document.getElementById("dynamicLatency").innerText = response.content;
+                                    }
+                                };
+                                xhr.send();
+                            }
+                            // Mesure de la latence toutes les 10 secondes
+                            setInterval(changeLatency, 10000);  
+                          </script>                     
                       </div>
                   </div>
               </div>
-          </div>
-      </div>
+            </div>
+        </div>
   
       <body>
         <div class="container mt-5">
@@ -91,12 +109,44 @@
               </div>
           </div>
         </div>
-    
+      </div>
+    </div>
+</div>
+<div class="modal" id="configModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Entrer des données</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Formulaire pour entrer des données -->
+          <form id="modalForm">
+            <div class="form-group">
+              <label for="network">Réseau</label>
+              <input type="text" class="form-control" id="network" name="network" placeholder="Entrez un réseau">
+            </div>
+            <div class="form-group">
+              <label for="destination">Destination</label>
+              <input type="text" class="form-control" id="destination" name="destination" placeholder="Entrez une destination">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" id="submitBtn">Soumettre</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
+    <div class="container mt-5">
     <p id="result"></p>
-    <button class="btn btn-dark" onclick="runScript()">Mise à jour Nmap</button>    
+    <button class="btn btn-dark" onclick="updateTable()">Mise à jour Nmap</button>    
     <table class="table table-striped">
         <thead>
           <tr>
@@ -105,26 +155,60 @@
             <th scope="col">Open Ports</th>
           </tr>
         </thead>
-        <tbody>
-          {% for i in range(0,data_details.machines_number) %}
-          <tr>
-            <th scope="row">{{i+1}}</th>
-            <td>{{data_details.ip_adresses[i]}}</td>
-            <td>{{data_details.open_ports[i]}}</td>
-          </tr>
-          {% endfor %}
+        <tbody id="tableBody">
         </tbody>
       </table>
-
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <h1 id="dynamicContent">{{ content }}</h1>
       <script>
-        function runScript() {
-            $.get('/refresh_nmap', function(data) {
-                $('#result').text(data.result);
+        function updateTable() {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/dashboard/refresh_nmap', true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  var response = JSON.parse(xhr.responseText);
+                  var tableBody = document.getElementById("tableBody");
+                  tableBody.innerHTML = ''; // Efface le contenu actuel du tableau
+                  var data = response.data_details_nmap;
+                  for (var i = 0; i < data.num_connected_hosts; i++) {
+                      var row = `<tr>
+                                   <th scope="row">${i+1}</th>
+                                   <td>${data.ip_adresses[i]}</td>
+                                   <td>${data.open_ports[i].join(', ')}</td>
+                                 </tr>`;
+                      tableBody.innerHTML += row;
+                  }
+              }
+          };
+          xhr.send();
+      }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#submitBtn').click(function() {
+              var data = {
+                network: $('#network').val(),
+                destination: $('#destination').val()
+              };
+          
+              $.ajax({
+                type: 'POST',
+                url: '/receive_modal_data',
+                data: data,
+                success: function(response) {
+                  console.log('Données reçues avec succès:', response);
+                  $('#configModal').modal('hide'); // Fermer la modale
+                },
+                error: function(error) {
+                  console.error('Erreur lors de l\'envoi des données:', error);
+                }
+              });
             });
-        }
+          });          
       </script>
+    </div>
     </body>
 </html>

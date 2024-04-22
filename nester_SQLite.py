@@ -1,19 +1,14 @@
 # Importation des modules (pip install -r requirement.txt)
 from flask import Flask, jsonify, render_template, redirect, flash, request
 from flask_sqlalchemy import SQLAlchemy
+#from flask_migrate import Migrate
 import time
 import threading
 import datetime
 import socket
-import argparse # Pour permettre les arguments CLI 
-
 
 app = Flask(__name__) # Instance de la classe Flask 
-parser = argparse.ArgumentParser(description="Script pour lancer nester") # Instance de argparse
-parser.add_argument('--bdd', default="postgresql://postgres:1234@172.18.0.33/nester",  help="Lien de la base de donnée postgres") # Instance de argparse
-args = parser.parse_args()
-bdd = args.bdd
-app.config['SQLALCHEMY_DATABASE_URI'] = bdd #URI de la bdd postgres 
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///bdd.db" #URI de la bdd postgres 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Test de la fonction True 
 app.secret_key = 'H,ObpL+jx0(nAu9j!seY[9B39-y<khl76'
 db = SQLAlchemy(app) # Instance de SQLAlchemy 
@@ -55,9 +50,10 @@ def manage_status_of_host():
                     print(f"[NESTER][INFO] Checking the status of : {client.hostname}")
                     time.sleep(3)
                     if now - float(client.last_request) > 20 and now - float(client.last_request) < 350:
-                        print(f"""Le temps actuel :   {now}
-Le temps de la dernière requête :   {float(client.last_request)}
-Le temps depuis la dernière requête :   {now - float(client.last_request)}   
+                        print(f"""  Le temps actuel :   {now}
+                        Le temps de la dernière requête :   {float(client.last_request)}
+                        Le temps depuis la dernière requête :   {now - float(client.last_request)}
+   
                                 """)
                         client.statut = "Disconnected"
                     elif now - float(client.last_request) > 600: # Cette partie du code peut rendre une erreur en essayant de détruire une entité déjà inexistante
@@ -67,6 +63,7 @@ Le temps depuis la dernière requête :   {now - float(client.last_request)}
             except Exception as e: 
                 print(f"[NESTER][STATUT_MANAGER][ERROR] {e}")
             db.session.commit()
+
 
 # Pour utiliser cette partie, executer : harvester.py ou le stack de client avec 'docker-compose up' 
 # Cette route n'accepte que les requêtes PUT (Création et mise à jour)
@@ -180,7 +177,7 @@ def connexion():
         else:
             flash("Connexion refusée. Merci de réessayer votre nom d'utilisateur ou votre mot de passe !")
             return redirect('/')
-    if request.method == 'GET': 
+    if request.method == 'GET': ##
         return render_template('login.html', hostname=socket.gethostname()) # Si la requète est "GET" (récupération de donnée )
 
 
