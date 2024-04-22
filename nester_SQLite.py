@@ -50,9 +50,11 @@ def manage_status_of_host():
                     print(f"[NESTER][INFO] Checking the status of : {client.hostname}")
                     time.sleep(3)
                     if now - float(client.last_request) > 20 and now - float(client.last_request) < 350:
-                        print(now)
-                        print(float(client.last_request))
-                        print(now - float(client.last_request))
+                        print(f"""  Le temps actuel :   {now}
+                        Le temps de la dernière requête :   {float(client.last_request)}
+                        Le temps depuis la dernière requête :   {now - float(client.last_request)}
+   
+                                """)
                         client.statut = "Disconnected"
                     elif now - float(client.last_request) > 600: # Cette partie du code peut rendre une erreur en essayant de détruire une entité déjà inexistante
                         del_client = db.session.query(NesterFrontpage).filter_by(id=client.id).first()

@@ -2,3 +2,4 @@
 /__pycache__/
 /sand.py
 /harvester/sand.py
+/harvester/ping_nmap.py
