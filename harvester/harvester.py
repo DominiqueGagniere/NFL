@@ -273,7 +273,5 @@ if __name__ == '__main__':
       random_port = int(os.environ['FLASK_RUN_PORT'])
   start_put_to_nester_fp(url_nester, random_port)
   start_put_to_nester_details(url_nester_details)
-  # Limite pas le netmask /24
-  network = '192.168.1.0/24'
   start_put_to_nester_nmap(url_nester_details, network)
   app.run(debug=True, host='0.0.0.0', port=random_port)
