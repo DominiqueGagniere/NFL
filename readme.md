@@ -1,8 +1,5 @@
 ![DALL·E 2023-12-30 12 38 31 - A minimalist banner representing an API for the NFL, featuring a monochromatic black design  The background is a deep, matte black, providing a stark ](https://github.com/DominiqueGagniere/NFL/assets/78609360/6b543220-b22d-4182-a9d2-2f9dcf040df9)
 # NFL API - Projet EPSI ASRBD  
-## Captures
-![Capture d'écran 2024-02-18 111439](https://github.com/user-attachments/assets/c6c4ccde-5a32-4347-aef2-dbad563bc64d)
-
 ## Les fichiers du projet et leurs rôles 
 - nester.py 
     - Le serveur du projet, fonctionnant via une base de données PostgreSQL (nécessite une base de données PostgreSQL disponible)
